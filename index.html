@@ -33,7 +33,7 @@
     function togglePlay(){
       //if(document.getElementById("audio1")){
         if(audioElm.paused == true){
-          audioElm.src = getElementById("audio1").src;
+          audioElm.src = document.getElementById("audio1").src;
           audioElm.onloadeddata = function(){
             playAudio(audioElm);
           }
