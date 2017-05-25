@@ -27,16 +27,20 @@
     var gz=0;
     var light=0;
     
-    var audioElm = document.getElementById("audio1");
+    // var audioElm = document.getElementById("audio1");
+    var audioElm = new Audio();
     
     function togglePlay(){
-      if(document.getElementById("audio1")){
+      //if(document.getElementById("audio1")){
         if(audioElm.paused == true){
-          playAudio(audioElm);
+          audioElm.src = getElementById("audio1").src;
+          audioElm.onloadeddata = function(){
+            playAudio(audioElm);
+          }
         } else {
           pauseAudio(audioElm);
         }
-      }
+      //}
     }
     
     function playAudio(audioElm){
