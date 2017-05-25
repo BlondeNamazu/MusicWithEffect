@@ -35,6 +35,11 @@
       //msgArea.appendChild(domMeg);
       msgArea.insertBefore(domMeg,msgArea.firstChild)
     }
+    
+    function clearMsgArea(){
+      msgArea = null;
+      msgArea = document.getElementById("msg");
+    }
 
     // 3.開始処理
     var msgArea = document.getElementById("msg");
