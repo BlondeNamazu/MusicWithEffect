@@ -6,7 +6,13 @@
 <body>
   <input type="text" id="msg_input" style="width:200px;" />
   <button onclick="publishMessage();">語る</button>
-  <button onclick="clearMsgArea();">クリア</button>
+  <button id-"playbutton" onclick="togglePlay();">Play</button>
+  <div>
+  <audio id="audio1" style="width:25%" controls>Canvas not supported</audio>
+  </div>
+  <div>
+  <input type="text" id="audioFile" value="OldAdam.mp3" size = "60">
+  </div>
   <div id="msg"></div>
   <script src="/socket.io/socket.io.js"></script>
   <script type="text/javascript">
@@ -14,10 +20,34 @@
     //var socketio = io.connect('http://localhost:8080');
     var socketio = io.connect();
     
+    //values
     var gx=0;
     var gy=0;
     var gz=0;
     var light=0;
+    
+    var audioElm = document.getElementById("audio1");
+    
+    function togglePlay(){
+      if(document.getElementById("audio1")){
+        if(audioElm.paused == true){
+          playAudio(audioElm);
+        } else {
+          pauseAudio(audioElm);
+        }
+      }
+    }
+    
+    function playAudio(audioElm){
+      document.getElementById("playbutton").innerHTML="Pause";
+      audioElm.src = document.getElementById('audioFile').value;
+      audioElm.play();
+    }
+    
+    function pauseAudio(audioElm){
+      document.getElementById("playbutton").innerHTML="Play";
+      audioElm.pause();
+    }
 
     //socketio.on("connected", function(name) {});
     socketio.on("publish", function (data) { addMessage(data.value); });
