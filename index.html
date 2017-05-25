@@ -6,12 +6,12 @@
 <body>
   <input type="text" id="msg_input" style="width:200px;" />
   <button onclick="publishMessage();">語る</button>
-  <button id-"playbutton" onclick="togglePlay();">Play</button>
+  <button id="playbutton" onclick="togglePlay();">Play</button>
   <div>
   <audio id="audio1" style="width:25%" controls>Canvas not supported</audio>
   </div>
   <div>
-  <input type="text" id="audioFile" value="OldAdam.mp3" size = "60">
+  <input type="text" id="audioFile" value="OldAdam.mp3" size = "60"/>
   </div>
   <div id="msg"></div>
   <script src="/socket.io/socket.io.js"></script>
