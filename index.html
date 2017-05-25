@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8">
@@ -11,7 +12,7 @@
   <audio id="audio1" style="width:25%" controls>Canvas not supported</audio>
   </div>
   <div>
-  <input type="text" id="audioFile" value="audio.wav" size="60" />
+  <input type="text" id="audioFile" value="audio.mp3" size="60" />
   </div>
   <div id="msg"></div>
   <script src="/socket.io/socket.io.js"></script>
@@ -40,7 +41,7 @@
     
     function playAudio(audioElm){
       document.getElementById("playbutton").innerHTML="Pause";
-      audioElm.src = "audio.wav"
+      audioElm.src = document.getElementById('audioFile').value;
       audioElm.play();
       //document.querySelector('#audioFile').play();
     }
