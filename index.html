@@ -33,8 +33,10 @@
     function togglePlay(){
       //if(document.getElementById("audio1")){
         if(audioElm.paused == true){
+          console.log("Load start");
           audioElm.src = document.getElementById("audio1").src;
           audioElm.onloadeddata = function(){
+            console.log("Load finish");
             playAudio(audioElm);
           }
         } else {
