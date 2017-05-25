@@ -13,6 +13,11 @@
     // 1.イベントとコールバックの定義
     //var socketio = io.connect('http://localhost:8080');
     var socketio = io.connect();
+    
+    var gx=0;
+    var gy=0;
+    var gz=0;
+    var light=0;
 
     //socketio.on("connected", function(name) {});
     socketio.on("publish", function (data) { addMessage(data.value); });
@@ -31,14 +36,43 @@
     }
 
     function addMessage (msg) {
+      clearMsgArea();
+      parse(msg);
+      var str = "x = " + gx;
       var domMeg = document.createElement('div');
-      domMeg.innerHTML = new Date().toLocaleTimeString() + ' ' + msg;
-      //msgArea.appendChild(domMeg);
-      msgArea.insertBefore(domMeg,msgArea.firstChild)
+      domMeg.innerHTML = new Date().toLocaleTimeString() + ' ' + str;
+      msgArea.appendChild(domMeg);
+      var str = "y = " + gy;
+      var domMeg = document.createElement('div');
+      domMeg.innerHTML = new Date().toLocaleTimeString() + ' ' + str;
+      msgArea.appendChild(domMeg);
+      var str = "z = " + gz;
+      var domMeg = document.createElement('div');
+      domMeg.innerHTML = new Date().toLocaleTimeString() + ' ' + str;
+      msgArea.appendChild(domMeg);
+      var str = "light = " + light;
+      var domMeg = document.createElement('div');
+      domMeg.innerHTML = new Date().toLocaleTimeString() + ' ' + str;
+      msgArea.appendChild(domMeg);
+      //msgArea.insertBefore(domMeg,msgArea.firstChild)
     }
     
     function clearMsgArea(){
       while(msgArea.firstChild) msgArea.removeChild(msgArea.firstChild);
+    }
+    
+    function parse(data){
+      data = data.split(" ");
+      if(data[1] == null) return;
+      if(data[1] == "x"){
+        gx = data[2];
+      } else if(data[1] == "y"){
+        gy = data[2];
+      } else if(data[1] == "z"){
+        gz = data[2];
+      } else if(data[1] == "light"){
+        light = data[2];
+      }
     }
 
     // 3.開始処理
