@@ -9,7 +9,7 @@
   <button onclick="publishMessage();">語る</button>
   <button id="playbutton" onclick="togglePlay();">Play</button>
   <div>
-  <audio id="audio1" style="width:25%" controls>Canvas not supported</audio>
+  <audio id="audio1" src="audio.mp3" preload="auto" style="width:25%" controls>Canvas not supported</audio>
   </div>
   <div>
   <input type="text" id="audioFile" value="audio.mp3" size="60" />
@@ -41,7 +41,7 @@
     
     function playAudio(audioElm){
       document.getElementById("playbutton").innerHTML="Pause";
-      audioElm.src = document.getElementById('audioFile').value;
+      //audioElm.src = document.getElementById('audioFile').value;
       audioElm.play();
       //document.querySelector('#audioFile').play();
     }
