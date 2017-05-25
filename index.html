@@ -37,8 +37,7 @@
     }
     
     function clearMsgArea(){
-      msgArea = null;
-      msgArea = document.getElementById("msg");
+      while(msgArea.firstChild) msgArea.removeChild(msgArea.firstChild);
     }
 
     // 3.開始処理
