@@ -41,8 +41,8 @@
     function playAudio(audioElm){
       document.getElementById("playbutton").innerHTML="Pause";
       // audioElm.src = document.getElementById("audioFile").value;
-      audioElm.src = window.URL.createObjectURL("audioFile").value;
-      audioElm.play();
+      // audioElm.play();
+      document.querySelector('#audioFile').play();
     }
     
     function pauseAudio(audioElm){
