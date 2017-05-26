@@ -5,9 +5,11 @@ var server = require("http").createServer(function(req, res) {
      if(req.path == "/audio.mp3"){
        res.writeHead(200,{"Content-Type":"audio/mpeg"});
        output = fs.readFileSync("./audio.mp3");
+       console.log("This is mp3");
      } else {
        res.writeHead(200, {"Content-Type":"text/html"});
        output = fs.readFileSync("./index.html", "utf-8");
+       console.log("This is html");
      }
      res.end(output);
 }).listen(8080);
