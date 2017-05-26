@@ -2,6 +2,7 @@
 var fs = require("fs");
 var server = require("http").createServer(function(req, res) {
      var output;
+     console.log(url.parse(req.url).pathname);
      if(req.url == "./audio.mp3" || req.url == "audio.mp3" || req.url == "http://musicviaweb.namazu.trap.show/audio.mp3"){
        console.log("This is mp3");
        var msg = "debug : " + "This is mp3";
