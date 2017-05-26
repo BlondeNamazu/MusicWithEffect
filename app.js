@@ -4,7 +4,7 @@ var server = require("http").createServer(function(req, res) {
      var output;
      if(req.path == "/audio.mp3"){
        res.writeHead(200,{"Content-Type":"audio/mpeg"});
-       output = fs.statSync("./audio.mp3");
+       output = fs.readFileSync("./audio.mp3");
      } else {
        res.writeHead(200, {"Content-Type":"text/html"});
        output = fs.readFileSync("./index.html", "utf-8");
