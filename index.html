@@ -36,10 +36,10 @@
           console.log("Load start");
           audioElm.src = "/audio.mp3";
           audioElm.load();
-          audioElm.onloadeddata = function(){
+          //audioElm.onloadeddata = function(){
             console.log("Load finish");
             playAudio(audioElm);
-          }
+          //}
         } else {
           pauseAudio(audioElm);
         }
