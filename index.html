@@ -9,10 +9,10 @@
   <button onclick="publishMessage();">語る</button>
   <button id="playbutton" onclick="togglePlay();">Play</button>
   <div>
-  <audio id="audio1" src="/audio.mp3" preload="auto" style="width:25%" controls>Canvas not supported</audio>
+  <audio id="audio1" src="./audio.mp3" preload="auto" style="width:25%" controls>Canvas not supported</audio>
   </div>
   <div>
-  <input type="text" id="audioFile" value="/audio.mp3" size="60" />
+  <input type="text" id="audioFile" value="./audio.mp3" size="60" />
   </div>
   <div id="msg"></div>
   <script src="/socket.io/socket.io.js"></script>
@@ -29,7 +29,7 @@
     
     
     // var audioElm = new Audio(document.getElementById("audioFile").value);
-    var audioElm = new Audio("/audio.mp3");
+    var audioElm = new Audio("./audio.mp3");
     
     function togglePlay(){
       //if(document.getElementById("audio1")){
