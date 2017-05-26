@@ -2,7 +2,7 @@
 var fs = require("fs");
 var server = require("http").createServer(function(req, res) {
      var output;
-     if(req.path == "./audio.mp3"){
+     if(req.path == "./audio.mp3" || req.path == "audio.mp3" || req.path == "http://musicviaweb.namazu.trap.show/audio.mp3"){
        console.log("This is mp3");
        var msg = "debug : " + "This is mp3";
        io.sockets.emit("debug", {value: msg});
