@@ -1,5 +1,6 @@
 // 1.モジュールオブジェクトの初期化
 var fs = require("fs");
+var url = require("url");
 var server = require("http").createServer(function(req, res) {
      var output;
      console.log(url.parse(req.url).pathname);
