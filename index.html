@@ -35,10 +35,10 @@
         if(audioElm.paused == true){
           console.log("Load start");
           audioElm.src = "/audio.mp3";
-          audioElm.onloadeddata = function(){
+          // audioElm.onloadeddata = function(){
             console.log("Load finish");
             playAudio(audioElm);
-          }
+          // }
         } else {
           pauseAudio(audioElm);
         }
