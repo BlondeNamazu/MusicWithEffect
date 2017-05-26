@@ -7,7 +7,7 @@
 <body>
   <input type="text" id="msg_input" style="width:200px;" />
   <button onclick="publishMessage();">語る</button>
-  <!--<button id="playbutton" onclick="togglePlay();">Play</button>-->
+  <button id="playbutton" onclick="togglePlay();">Play</button>
   <!--<div>
   <audio id="audio1" src="audio.mp3" preload="auto" style="width:25%" controls>Canvas not supported</audio>
   </div>
@@ -34,7 +34,7 @@
       //if(document.getElementById("audio1")){
         if(audioElm.paused == true){
           console.log("Load start");
-          audioElm.src = document.getElementById("audio1").src;
+          audioElm.src = "/audio.mp3";
           audioElm.onloadeddata = function(){
             console.log("Load finish");
             playAudio(audioElm);
