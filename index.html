@@ -105,42 +105,56 @@
 // var loader = new Loader('/audio.mp3');
 // loader.loadBuffer();
 
-//     //socketio.on("connected", function(name) {});
-//     socketio.on("publish", function (data) { addMessage(data.value); });
-//     //socketio.on("disconnect", function () {});
+    socketio.on("publish", function (data) { addMessage(data.value); });
+    socketio.on("debug", function(data){ addDebugMsg(data.val); });
 
-//     // 2.イベントに絡ませる関数の定義
-//     function start(name) {
-//       socketio.emit("connected", name);
-//     }
+    // 2.イベントに絡ませる関数の定義
+    function start(name) {
+      socketio.emit("connected", name);
+    }
 
-//     function publishMessage() {
-//       var textInput = document.getElementById('msg_input');
-//       var msg = "[" + myName + "] " + textInput.value;
-//       socketio.emit("publish", {value: msg});
-//       textInput.value = '';
-//     }
+    function publishMessage() {
+      var textInput = document.getElementById('msg_input');
+      var msg = "[" + myName + "] " + textInput.value;
+      socketio.emit("publish", {value: msg});
+      textInput.value = '';
+    }
+    
+    function addDebugMsg(val){
+      console.log(val);
+    }
 
     function addMessage (msg) {
       clearMsgArea();
       parse(msg);
-      var str = "x = " + gx;
-      var domMeg = document.createElement('div');
-      domMeg.innerHTML = new Date().toLocaleTimeString() + ' ' + str;
-      msgArea.appendChild(domMeg);
-      var str = "y = " + gy;
-      var domMeg = document.createElement('div');
-      domMeg.innerHTML = new Date().toLocaleTimeString() + ' ' + str;
-      msgArea.appendChild(domMeg);
-      var str = "z = " + gz;
-      var domMeg = document.createElement('div');
-      domMeg.innerHTML = new Date().toLocaleTimeString() + ' ' + str;
-      msgArea.appendChild(domMeg);
-      var str = "light = " + light;
-      var domMeg = document.createElement('div');
-      domMeg.innerHTML = new Date().toLocaleTimeString() + ' ' + str;
-      msgArea.appendChild(domMeg);
+      addMsgChild("x = ",gx);
+      addMsgChild("y = ",gy);
+      addMsgChild("z = ",gz);
+      addMsgChild("light = ",light);
+      // var str = "x = " + gx;
+      // var domMeg = document.createElement('div');
+      // domMeg.innerHTML = new Date().toLocaleTimeString() + ' ' + str;
+      // msgArea.appendChild(domMeg);
+      // var str = "y = " + gy;
+      // var domMeg = document.createElement('div');
+      // domMeg.innerHTML = new Date().toLocaleTimeString() + ' ' + str;
+      // msgArea.appendChild(domMeg);
+      // var str = "z = " + gz;
+      // var domMeg = document.createElement('div');
+      // domMeg.innerHTML = new Date().toLocaleTimeString() + ' ' + str;
+      // msgArea.appendChild(domMeg);
+      // var str = "light = " + light;
+      // var domMeg = document.createElement('div');
+      // domMeg.innerHTML = new Date().toLocaleTimeString() + ' ' + str;
+      // msgArea.appendChild(domMeg);
       //msgArea.insertBefore(domMeg,msgArea.firstChild)
+    }
+    
+    function addMsgChild(des,val){
+      var str = des + val;
+      var domMeg = document.createElement('div');
+      domMeg.innerHTML = new Date().toLocaleTimeString() + ' ' + str;
+      msgArea.appendChild(domMeg);
     }
     
     function clearMsgArea(){

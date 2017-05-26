@@ -2,14 +2,19 @@
 var fs = require("fs");
 var server = require("http").createServer(function(req, res) {
      var output;
+     console.log(req.path);
      if(req.path == "/audio.mp3"){
+       console.log("This is mp3");
+       var msg = "debug : " + "This is mp3";
+       io.sockets.emit("debug", {value: msg});
        res.writeHead(200,{"Content-Type":"audio/mpeg"});
        output = fs.readFileSync("./audio.mp3");
-       console.log("This is mp3");
      } else {
+       console.log("This is html");
+        var msg = "debug : " + "This is html";
+       io.sockets.emit("debug", {value: msg});
        res.writeHead(200, {"Content-Type":"text/html"});
        output = fs.readFileSync("./index.html", "utf-8");
-       console.log("This is html");
      }
      res.end(output);
 }).listen(8080);
@@ -31,6 +36,11 @@ io.sockets.on("connection", function (socket) {
   // メッセージ送信カスタムイベント
   socket.on("publish", function (data) {
     io.sockets.emit("publish", {value:data.value});
+  });
+  
+  socket.on("debug", function (data) {
+    var msg = "debug : " + data;
+    io.sockets.emit("debug", {value: msg});
   });
 
   // 接続終了組み込みイベント(接続元ユーザを削除し、他ユーザへ通知)
