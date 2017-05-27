@@ -8,7 +8,7 @@ var server = require("http").createServer(function(req, res) {
        console.log("This is mp3");
        var msg = "debug : " + "This is mp3";
        res.writeHead(200,{"Content-Type":"audio/mpeg"});
-       output = fs.readFileSync(url.parse(req.url).pathname);
+       output = fs.readFileSync("."+url.parse(req.url).pathname);
      } else {
        console.log("This is html");
         var msg = "debug : " + "This is html";
