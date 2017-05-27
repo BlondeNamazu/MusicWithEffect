@@ -142,9 +142,11 @@ BufferLoader.prototype.load = function() {
     }
     
     function playMusic (){
-      var source = sourceClock;
-      if(!source.start) source.start = source.noteOn;
-      source.start(0);
+      // var source = sourceClock;
+      // if(!source.start) source.start = source.noteOn;
+      // source.start(0);
+      if(!sourceClock.start) sourceClock.start = sourceClock.noteOn;
+      sourceClock.start();
     }
 
     // 2.イベントに絡ませる関数の定義
