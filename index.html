@@ -65,6 +65,7 @@
     var bufferLoader;
     var sourceClock,sourceAudio;
     var gainNode;
+    var bufferClock,bufferAudio;
     
     function init(){
       window.AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -82,19 +83,8 @@
     
     function finishedLoading(bufferList){
       console.log("finished Loading!");
-      sourceClock = context.createBufferSource();
-      sourceAudio = context.createBufferSource();
-      sourceClock.buffer = bufferList[0];
-      sourceAudio.buffer = bufferList[1];
-      
-      //sourceClock.connect(context.destination);
-      sourceAudio.connect(context.destination);
-      
-      gainNode = context.createGain();
-      sourceClock.connect(gainNode);
-      gainNode.connect(context.destination);
-      
-      sourceClock.loop = true;
+      bufferClock = bufferList[0];
+      bufferAudio = bufferList[0];
       
       loadFinished = true;
     }
@@ -156,6 +146,19 @@
         return;
       }
       if(!nowPlaying){
+        sourceClock = context.createBufferSource();
+        sourceAudio = context.createBufferSource();
+        sourceClock.buffer = bufferClock;
+        sourceAudio.buffer = bufferAudio;
+        
+        //sourceClock.connect(context.destination);
+        sourceAudio.connect(context.destination);
+        
+        gainNode = context.createGain();
+        sourceClock.connect(gainNode);
+        gainNode.connect(context.destination);
+        
+        sourceClock.loop = true;
         sourceClock.start(0);
         nowPlaying = true;
       } else {
