@@ -33,6 +33,9 @@
     var ay=0;
     var az=0;
     
+    var loadFinished = false;
+    var nowPlaying = false;
+    
     var audioElm = new Audio("./clock.mp3");
     
     function togglePlay(){
@@ -93,7 +96,7 @@
       
       sourceClock.loop = true;
       
-      //sourceClock.start(0);
+      loadFinished = true;
     }
     
     function BufferLoader(context, urlList, callback) {
@@ -148,10 +151,17 @@
     }
     
     function playMusic (){
-      // var source = sourceClock;
-      // if(!source.start) source.start = source.noteOn;
-      // source.start(0);
-      sourceClock.start(0);
+      if(!loadFinished){
+        console.log("Please wait");
+        return;
+      }
+      if(!nowPlaying){
+        sourceClock.start(0);
+        nowPlaying = true;
+      } else {
+        sourceClock.stop(0);
+        nowPlaying = false;
+      }
     }
 
     // 2.イベントに絡ませる関数の定義
