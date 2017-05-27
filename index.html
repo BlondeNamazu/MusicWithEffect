@@ -154,6 +154,7 @@
         //sourceClock.connect(context.destination);
         sourceAudio.connect(context.destination);
         
+        gainNode = context.createGain();
         sourceClock.connect(gainNode);
         gainNode.connect(context.destination);
         
