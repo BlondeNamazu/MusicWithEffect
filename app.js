@@ -4,7 +4,7 @@ var url = require("url");
 var server = require("http").createServer(function(req, res) {
      var output;
      console.log(url.parse(req.url).pathname);
-     if(url.parse(req.url).pathname == "/audio.mp3"){
+     if(url.parse(req.url).pathname == "/audio.mp3" || url.parse(req.url).pathname == "/clock.mp3"){
        console.log("This is mp3");
        var msg = "debug : " + "This is mp3";
        res.writeHead(200,{"Content-Type":"audio/mpeg"});
