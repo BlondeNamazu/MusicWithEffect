@@ -5,7 +5,9 @@ startup: npm install socket.io
 entrypoint: node app.js
 
 branch:
+    audioContext:
+        expose:1341
     effect:
-        expose: 1341
+        expose: 1342
 
 http_proxy: 8080
