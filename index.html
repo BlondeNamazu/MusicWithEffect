@@ -7,7 +7,7 @@
 <body>
   <input type="text" id="msg_input" style="width:200px;" />
   <button onclick="publishMessage();">語る</button>
-  <button id="playbutton" onclick="playMusic(sourceClock);">Play</button>
+  <button id="playbutton" onclick="playMusic();">Play</button>
   <div>
   <audio id="audio1" src="clock.mp3" preload="auto" style="width:25%" controls loop>Canvas not supported</audio>
   </div>
@@ -94,7 +94,8 @@
       gainNode.gain.value = val * val;
     }
     
-    function playMusic (source){
+    function playMusic (){
+      var source = sourceClock;
       if(!source.start) source.start = source.noteOn;
       source.start(0);
     }
