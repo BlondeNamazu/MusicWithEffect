@@ -137,7 +137,8 @@
     }
     
     function changeVolume (val){
-      gainNode.gain.value = val * val /10000;
+      if(val>1) val /= 10000;
+      gainNode.gain.value = val;
     }
     
     function playMusic (){
