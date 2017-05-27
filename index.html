@@ -86,7 +86,7 @@
       sourceClock.connect(context.destination);
       sourceAudio.connect(context.destination);
       
-      sourceClock.start();
+      sourceClock.start(0);
     }
     
     function BufferLoader(context, urlList, callback) {
