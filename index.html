@@ -7,9 +7,12 @@
 <body>
   <input type="text" id="msg_input" style="width:200px;" />
   <button onclick="publishMessage();">語る</button>
-  <button id="playbutton" onclick="togglePlay();">Play</button>
+  <button id="playbutton" onclick="playMusic(source1);">Play</button>
   <div>
   <audio id="audio1" src="clock.mp3" preload="auto" style="width:25%" controls loop>Canvas not supported</audio>
+  </div>
+  <div>
+  <input type="range" min="0" max="100" value="100" onchange="changeVolume(sourceClock,this.value);" />
   </div>
   <!--<div>
   <input type="text" id="audioFile" value="./clock.mp3" size="60" />
@@ -54,10 +57,50 @@
     }
 
     socketio.on("publish", function (data) { addMessage(data.value); });
-    socketio.on("debug", function(data){ addDebugMsg(data.val); });
+    
+    var context;
+    var bufferLoader;
+    var sourceClock,sourceAudio;
+    var gainNode;
+    
+    function init(){
+      window.AudioContext = window.AudioContext || window.webkitAudioContext;
+      context = new AudioContext();
+      bufferLoader = new BufferLoader(
+        context,
+        [
+          './clock.mp3',
+          './audio.mp3'
+        ],
+        finishedLoading
+      );
+      bufferLoader.load();
+    }
+    
+    function finishedLoading(bufferList){
+      sourceClock = context.createBufferSource();
+      sourceAudio = context.createBufferSource();
+      sourceClock.buffer = bufferList[0];
+      sourceAudio.buffer = bufferList[1];
+      
+      sourceClock.connect(context.destination);
+      sourceAudio.connect(context.destination);
+    }
+    
+    function changeVolume (source,val){
+      gainNode = context.createGain();
+      source.connect(gainNode);
+      gainNode.connect(context.destination);
+      gainNode.gain.value = val * val;
+    }
+    
+    function playMusic (source){
+      source.start(0);
+    }
 
     // 2.イベントに絡ませる関数の定義
     function start(name) {
+      init();
       socketio.emit("connected", name);
     }
 
