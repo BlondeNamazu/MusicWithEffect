@@ -12,7 +12,7 @@
   <audio id="audio1" src="clock.mp3" preload="auto" style="width:25%" controls loop>Canvas not supported</audio>
   </div>
   <div>
-  <input type="range" min="0" max="100" value="100" onchange="changeVolume(sourceClock,this.value);" />
+  <input type="range" min="0" max="100" value="100" onchange="changeVolume(this.value);" />
   </div>
   <!--<div>
   <input type="text" id="audioFile" value="./clock.mp3" size="60" />
@@ -141,7 +141,7 @@
     }
     
     function changeVolume (val){
-      gainNode.gain.value = val * val;
+      gainNode.gain.value = val * val /10000;
     }
     
     function playMusic (){
