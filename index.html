@@ -78,6 +78,7 @@
     }
     
     function finishedLoading(bufferList){
+      console.log("finished Loading!");
       sourceClock = context.createBufferSource();
       sourceAudio = context.createBufferSource();
       sourceClock.buffer = bufferList[0];
@@ -89,6 +90,8 @@
       gainNode = context.createGain();
       sourceClock.connect(gainNode);
       gainNode.connect(context.destination);
+      
+      sourceClock.loop = true;
       
       sourceClock.start(0);
     }
