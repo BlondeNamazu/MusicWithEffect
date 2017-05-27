@@ -83,8 +83,12 @@
       sourceClock.buffer = bufferList[0];
       sourceAudio.buffer = bufferList[1];
       
-      sourceClock.connect(context.destination);
+      //sourceClock.connect(context.destination);
       sourceAudio.connect(context.destination);
+      
+      gainNode = context.createGain();
+      sourceClock.connect(gainNode);
+      gainNode.connect(context.destination);
       
       sourceClock.start(0);
     }
@@ -136,10 +140,7 @@
       this.loadBuffer(this.urlList[i], i);
     }
     
-    function changeVolume (source,val){
-      gainNode = context.createGain();
-      source.connect(gainNode);
-      gainNode.connect(context.destination);
+    function changeVolume (val){
       gainNode.gain.value = val * val;
     }
     
