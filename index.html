@@ -95,6 +95,7 @@
     }
     
     function playMusic (source){
+      if(!source.start) source.start = source.noteOn;
       source.start(0);
     }
 
