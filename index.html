@@ -9,10 +9,10 @@
   <button onclick="publishMessage();">語る</button>
   <button id="playbutton" onclick="togglePlay();">Play</button>
   <div>
-  <audio id="audio1" src="audio.mp3" preload="auto" style="width:25%" controls>Canvas not supported</audio>
+  <audio id="audio1" src="clock.mp3" preload="auto" style="width:25%" controls loop>Canvas not supported</audio>
   </div>
   <!--<div>
-  <input type="text" id="audioFile" value="./audio.mp3" size="60" />
+  <input type="text" id="audioFile" value="./clock.mp3" size="60" />
   </div>-->
   <div id="msg"></div>
   <script src="/socket.io/socket.io.js"></script>
@@ -26,8 +26,11 @@
     var gy=0;
     var gz=0;
     var light=0;
+    var ax~0;
+    var ay=0;
+    var az=0;
     
-    var audioElm = new Audio("./audio.mp3");
+    var audioElm = new Audio("./clock.mp3");
     
     function togglePlay(){
         if(audioElm.paused == true){
@@ -40,6 +43,7 @@
     function playAudio(audioElm){
       document.getElementById("playbutton").innerHTML="Pause";
       //audioElm.src = document.getElementById('audioFile').value;
+      
       audioElm.play();
       //document.querySelector('#audioFile').play();
     }
@@ -71,10 +75,13 @@
     function addMessage (msg) {
       clearMsgArea();
       parse(msg);
-      addMsgChild("x = ",gx);
-      addMsgChild("y = ",gy);
-      addMsgChild("z = ",gz);
+      addMsgChild("gx = ",gx);
+      addMsgChild("gy = ",gy);
+      addMsgChild("gz = ",gz);
       addMsgChild("light = ",light);
+      addMsgChild("ax = ",ax);
+      addMsgChild("ay = ",ay);
+      addMsgChild("az = ",az);
       //msgArea.insertBefore(domMeg,msgArea.firstChild)
     }
     
@@ -92,15 +99,21 @@
     function parse(data){
       data = data.split(" ");
       if(data[1] == null) return;
-      if(data[1] == "x"){
+      if(data[1] == "gx"){
         gx = data[2];
-      } else if(data[1] == "y"){
+      } else if(data[1] == "gy"){
         gy = data[2];
-      } else if(data[1] == "z"){
+      } else if(data[1] == "gz"){
         gz = data[2];
       } else if(data[1] == "light"){
         light = data[2];
-      }
+      } else if(data[1] == "ax"){
+        ax = data[2];
+      } else if(data[1] == "ay"){
+        ay = data[2];
+      } else if(data[1] == "az"){
+        az = data[2];
+      } 
     }
 
     // 3.開始処理
