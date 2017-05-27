@@ -64,7 +64,7 @@
     var context;
     var bufferLoader;
     var sourceClock,sourceAudio;
-    var gainNode;
+    var gainNode = context.createGain();
     var bufferClock,bufferAudio;
     
     function init(){
@@ -154,7 +154,6 @@
         //sourceClock.connect(context.destination);
         sourceAudio.connect(context.destination);
         
-        gainNode = context.createGain();
         sourceClock.connect(gainNode);
         gainNode.connect(context.destination);
         
@@ -217,7 +216,7 @@
         gy = data[2];
       } else if(data[1] == "gz"){
         gz = data[2];
-        changeVolume(0.5+gz/20.0);
+        if(loadFinished)changeVolume(0.5+gz/20.0);
       } else if(data[1] == "light"){
         light = data[2];
       } else if(data[1] == "ax"){
