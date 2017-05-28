@@ -68,7 +68,6 @@
     var bufferClock,bufferAudio;
     var isDelayValid = false;
     
-    
     function init(){
       window.AudioContext = window.AudioContext || window.webkitAudioContext;
       context = new AudioContext();
@@ -272,6 +271,9 @@
       } 
       if(ax>30 && gx > 8) isDelayValid = true;
       else if (ax < -30 && gx < -8) isDelayValid = false;
+      
+      if(az < -30) makeDistortionCurve(400);
+      else if (az > 30) makeDistortionCurve(0);
     }
 
     // 3.開始処理
