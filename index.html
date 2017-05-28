@@ -247,7 +247,7 @@
       if(data[1] == null) return;
       if(data[1] == "gx"){
         gx = data[2];
-        if(nowPlaying)setBFilter(Math.abs(gx)*40 * 4);
+        if(nowPlaying)setBFilter(Math.abs(gx)*4);
       } else if(data[1] == "gy"){
         gy = data[2];
         if(nowPlaying)makeDistortionCurve(Math.abs(gy)*10);
