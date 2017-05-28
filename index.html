@@ -258,7 +258,7 @@
         if(nowPlaying)setBFilter(gx*3.5);
       } else if(data[1] == "gy"){
         gy = data[2];
-        if(nowPlaying&&isDelayValid)setDelay(Math.pow(Math.abs(gy),4)/80000);
+        if(nowPlaying)setDelay(Math.pow(Math.abs(gy),4)/80000);
       } else if(data[1] == "gz"){
         gz = data[2];
         if(nowPlaying)changeVolume(0.65+gz/30.0);
@@ -271,19 +271,21 @@
       } else if(data[1] == "az"){
         az = data[2];
       } 
-      if(ax>30 && gx > 8) isDelayValid = true;
-      else if (ax < -30 && gx < -8) isDelayValid = false;
-      else if(az < -30 && !isDistortionValid && distortionFlagTimer < 0) {
-        makeDistortionCurve(20);
+      var aSize = Math.sqrt(ax*ax+ay*ay+az*az);
+      // if(ax>30 && gx > 8) isDelayValid = true;
+      // else if (ax < -30 && gx < -8) isDelayValid = false;
+      // else 
+      if(aSize > 50 && !isDistortionValid && distortionFlagTimer < 0) {
+        makeDistortionCurve(5);
         console.log("add distortion!");
         isDistortionValid = true;
-        distortionFlagTimer = 1000;
+        distortionFlagTimer = 100;
       }
-      else if (az > 30 && isDistortionValid && distortionFlagTimer < 0) {
-        makeDistortionCurve(-3);
+      else if (aSize > 50 && isDistortionValid && distortionFlagTimer < 0) {
+        makeDistortionCurve(0);
         console.log("remove distortion!");
         isDistortionValid = false;
-        distortionFlagTimer = 1000;
+        distortionFlagTimer = 100;
       }
       if(distortionFlagTimer == 0) console.log("distortionTimer = 0!");
       distortionFlagTimer --;
