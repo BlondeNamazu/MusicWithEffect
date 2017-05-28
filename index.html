@@ -64,7 +64,7 @@
     var context;
     var bufferLoader;
     var sourceClock//,sourceAudio;
-    var gainNode,distortion,bFilter,convolver;
+    var gainNode,distortion,bFilter,convolver,synth;
     var bufferClock,bufferAudio;
     
     function init(){
@@ -162,6 +162,10 @@
       bFilter.frequency.value = 1000;
       bFilter.gain.value = value;
     }
+    
+    function setDelay(value){
+      synth.delayTime.value = value;
+    }
         
     function playMusic (){
       if(!loadFinished){
@@ -181,11 +185,12 @@
         distortion = context.createWaveShaper();
         bFilter = context.createBiquadFilter();
         convolver = context.createConvolver();
+        synth = context.createDelay(5.0);
         
         sourceClock.connect(distortion);
         distortion.connect(bFilter);
-        bFilter.connect(gainNode);
-        //convolver.connect(gainNode);
+        bFilter.connect(synth);
+        synth.connect(gainNode);
         gainNode.connect(context.destination);
         
         bFilter.gain.value = 0;
@@ -250,7 +255,7 @@
         if(nowPlaying)setBFilter(Math.abs(gx)*4);
       } else if(data[1] == "gy"){
         gy = data[2];
-        if(nowPlaying)makeDistortionCurve(Math.abs(gy)*10);
+        if(nowPlaying)setDelay(Math.abs(gy)/2.0);
       } else if(data[1] == "gz"){
         gz = data[2];
         if(nowPlaying)changeVolume(0.5+gz/20.0);
