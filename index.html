@@ -184,8 +184,8 @@
         
         sourceClock.connect(distortion);
         distortion.connect(bFilter);
-        bFilter.connect(convolver);
-        convolver.connect(gainNode);
+        bFilter.connect(gainNode);
+        //convolver.connect(gainNode);
         gainNode.connect(context.destination);
         
         bFilter.gain.value = 0;
