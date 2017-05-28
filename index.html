@@ -272,8 +272,14 @@
       if(ax>30 && gx > 8) isDelayValid = true;
       else if (ax < -30 && gx < -8) isDelayValid = false;
       
-      if(az < -30) makeDistortionCurve(400);
-      else if (az > 30) makeDistortionCurve(0);
+      if(az < -30) {
+        makeDistortionCurve(400);
+        console.log("add distortion!");
+      }
+      else if {
+        (az > 30) makeDistortionCurve(0);
+        console.log("remove distortion!");
+      }
     }
 
     // 3.開始処理
