@@ -63,8 +63,8 @@
     
     var context;
     var bufferLoader;
-    var sourceClock,sourceAudio;
-    var gainNode;
+    var sourceClock//,sourceAudio;
+    var gainNode,distortion,bFilter,convolver;
     var bufferClock,bufferAudio;
     
     function init(){
@@ -73,8 +73,8 @@
       bufferLoader = new BufferLoader(
         context,
         [
-          './clock.mp3',
-          './audio.mp3'
+          './clock.mp3'//,
+          // './audio.mp3'
         ],
         finishedLoading
       );
@@ -84,7 +84,7 @@
     function finishedLoading(bufferList){
       console.log("finished Loading!");
       bufferClock = bufferList[0];
-      bufferAudio = bufferList[0];
+      //bufferAudio = bufferList[0];
       
       loadFinished = true;
     }
@@ -141,6 +141,28 @@
       gainNode.gain.value = val;
     }
     
+    function makeDistortionCurve(amount) {
+      var k = typeof amount === 'number' ? amount : 50,
+        n_samples = 44100,
+        curve = new Float32Array(n_samples),
+        deg = Math.PI / 180,
+        i = 0,
+        x;
+      for ( ; i < n_samples; ++i ) {
+        x = i * 2 / n_samples - 1;
+        curve[i] = ( 3 + k ) * x * 20 * deg / ( Math.PI + k * Math.abs(x) );
+      }
+      //return curve;
+      distortion.curve = curve;
+      distortion.oversample = '4x';
+    };
+    
+    function setBFilter (value){
+      bFilter.type = "lowshelf";
+      bFilter.frequency.value = 1000;
+      bFilter.gain.value = value;
+    }
+        
     function playMusic (){
       if(!loadFinished){
         console.log("Please wait");
@@ -148,16 +170,27 @@
       }
       if(!nowPlaying){
         sourceClock = context.createBufferSource();
-        sourceAudio = context.createBufferSource();
+        //sourceAudio = context.createBufferSource();
         sourceClock.buffer = bufferClock;
-        sourceAudio.buffer = bufferAudio;
+        //sourceAudio.buffer = bufferAudio;
         
         //sourceClock.connect(context.destination);
-        sourceAudio.connect(context.destination);
+        //sourceAudio.connect(context.destination);
         
         gainNode = context.createGain();
-        sourceClock.connect(gainNode);
+        distortion = context.createWaveShaper();
+        bFilter = context.createBiquadFilter();
+        convolver = context.createConvolver();
+        
+        sourceClock.connect(distortion);
+        distortion.connect(bFilter);
+        bFilter.connect(convolver);
+        convolver.connect(gainNode);
         gainNode.connect(context.destination);
+        
+        bFilter.gain.value = 0;
+        
+        
         
         sourceClock.loop = true;
         sourceClock.start(0);
@@ -214,8 +247,10 @@
       if(data[1] == null) return;
       if(data[1] == "gx"){
         gx = data[2];
+        if(nowPlaying)setBFilter(gx * 4);
       } else if(data[1] == "gy"){
         gy = data[2];
+        if(nowPlaying)makeDistortionCurve(Math.abs(gy)*40);
       } else if(data[1] == "gz"){
         gz = data[2];
         if(nowPlaying)changeVolume(0.5+gz/20.0);
