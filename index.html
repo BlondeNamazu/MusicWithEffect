@@ -68,6 +68,7 @@
     var bufferClock,bufferAudio;
     var isDelayValid = false;
     var isDistortionValid = false;
+    var distortionFlagTimer = 0;
     
     function init(){
       window.AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -273,16 +274,19 @@
       if(ax>30 && gx > 8) isDelayValid = true;
       else if (ax < -30 && gx < -8) isDelayValid = false;
       
-      if(az < -30 && !isDistortionValid) {
+      if(az < -30 && !isDistortionValid && distortionFlagTimer < 0) {
         makeDistortionCurve(100);
         console.log("add distortion!");
         isDistortionValid = true;
+        distortionFlagTimer = 1000;
       }
-      else if (az > 30 && isDistortionValid) {
+      else if (az > 30 && isDistortionValid && distortionFlagTimer < 0) {
         makeDistortionCurve(0);
         console.log("remove distortion!");
         isDistortionValid = false;
+        distortionFlagTimer = 1000;
       }
+      distortionFlagTimer --;
     }
 
     // 3.開始処理
