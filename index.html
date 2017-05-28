@@ -66,6 +66,8 @@
     var sourceClock//,sourceAudio;
     var gainNode,distortion,bFilter,convolver,synth;
     var bufferClock,bufferAudio;
+    var isDelayValid = false;
+    
     
     function init(){
       window.AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -252,13 +254,13 @@
       if(data[1] == null) return;
       if(data[1] == "gx"){
         gx = data[2];
-        if(nowPlaying)setBFilter(Math.abs(gx)*4);
+        if(nowPlaying)setBFilter(gx*3.5);
       } else if(data[1] == "gy"){
         gy = data[2];
-        if(nowPlaying)setDelay(Math.pow(Math.abs(gy),4)/10000);
+        if(nowPlaying&&isDelayValid)setDelay(Math.pow(Math.abs(gy),4)/80000);
       } else if(data[1] == "gz"){
         gz = data[2];
-        if(nowPlaying)changeVolume(0.8+gz/50.0);
+        if(nowPlaying)changeVolume(0.65+gz/30.0);
       } else if(data[1] == "light"){
         light = data[2];
       } else if(data[1] == "ax"){
@@ -268,6 +270,8 @@
       } else if(data[1] == "az"){
         az = data[2];
       } 
+      if(ax>30 && gx > 8) isDelayValid = true;
+      else if (ax < -30 && gx < -8) isDelayValid = false;
     }
 
     // 3.開始処理
