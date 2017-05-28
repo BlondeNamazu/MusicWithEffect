@@ -255,10 +255,10 @@
         if(nowPlaying)setBFilter(Math.abs(gx)*4);
       } else if(data[1] == "gy"){
         gy = data[2];
-        if(nowPlaying)setDelay(Math.abs(gy)/10.0);
+        if(nowPlaying)setDelay(Math.pow(Math.abs(gy),4)/10000);
       } else if(data[1] == "gz"){
         gz = data[2];
-        if(nowPlaying)changeVolume(0.5+gz/20.0);
+        if(nowPlaying)changeVolume(0.8+gz/50.0);
       } else if(data[1] == "light"){
         light = data[2];
       } else if(data[1] == "ax"){
