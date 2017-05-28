@@ -68,7 +68,8 @@
     var bufferClock,bufferAudio;
     var isDelayValid = false;
     var isDistortionValid = false;
-    var distortionFlagTimer = 0;
+    var timer = 0;
+    var mode = true;
     
     function init(){
       window.AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -90,6 +91,10 @@
       //bufferAudio = bufferList[0];
       
       loadFinished = true;
+    }
+    
+    function changeMode(){
+      mode = !mode;
     }
     
     function BufferLoader(context, urlList, callback) {
@@ -189,7 +194,7 @@
         bFilter = context.createBiquadFilter();
         convolver = context.createConvolver();
         synth = context.createDelay(5.0);
-        pan = context.createStereoPanner();
+        pan = context.createPanner();
         
         sourceClock.connect(distortion);
         distortion.connect(bFilter);
@@ -257,14 +262,31 @@
       if(data[1] == null) return;
       if(data[1] == "gx"){
         gx = data[2];
-        if(nowPlaying)setBFilter(gx*3.5);
+        if(nowPlaying){
+          if(mode){
+            pan.positionX = -gx;
+          } else {
+            setBFilter(gx*3.5);
+          }
+        }
       } else if(data[1] == "gy"){
         gy = data[2];
-        if(nowPlaying)//setDelay(Math.pow(Math.abs(gy),4)/80000);
-        pan.pan.value = gy / 10.0;
+        if(nowPlaying){
+          if(mode){
+            pan.positionZ = gy;
+          } else {
+            setDelay(Math.pow(Math.abs(gy),4)/80000);
+          }
+        }
       } else if(data[1] == "gz"){
         gz = data[2];
-        if(nowPlaying)changeVolume(0.65+gz/30.0);
+        if(nowPlaying){
+          if(mode){
+            pan.positionY = -gz;
+          } else {
+            changeVolume(0.65+gz/30.0);
+          }
+        }
       } else if(data[1] == "light"){
         light = data[2];
       } else if(data[1] == "ax"){
@@ -277,21 +299,8 @@
       var aSize = Math.sqrt(ax*ax+ay*ay+az*az);
       if(ax>30 && gx > 8) isDelayValid = true;
       else if (ax < -30 && gx < -8) isDelayValid = false;
-      // else 
-      // if(aSize > 50 && !isDistortionValid && distortionFlagTimer < 0) {
-      //   makeDistortionCurve(5);
-      //   console.log("add distortion!");
-      //   isDistortionValid = true;
-      //   distortionFlagTimer = 100;
-      // }
-      // else if (aSize > 50 && isDistortionValid && distortionFlagTimer < 0) {
-      //   makeDistortionCurve(0);
-      //   console.log("remove distortion!");
-      //   isDistortionValid = false;
-      //   distortionFlagTimer = 100;
-      // }
-      // if(distortionFlagTimer == 0) console.log("distortionTimer = 0!");
-      // distortionFlagTimer --;
+      
+      timer --;
     }
 
     // 3.開始処理
