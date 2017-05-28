@@ -273,19 +273,19 @@
       } 
       if(ax>30 && gx > 8) isDelayValid = true;
       else if (ax < -30 && gx < -8) isDelayValid = false;
-      
-      if(az < -30 && !isDistortionValid && distortionFlagTimer < 0) {
-        makeDistortionCurve(100);
+      else if(az < -30 && !isDistortionValid && distortionFlagTimer < 0) {
+        makeDistortionCurve(20);
         console.log("add distortion!");
         isDistortionValid = true;
         distortionFlagTimer = 1000;
       }
       else if (az > 30 && isDistortionValid && distortionFlagTimer < 0) {
-        makeDistortionCurve(0);
+        makeDistortionCurve(-3);
         console.log("remove distortion!");
         isDistortionValid = false;
         distortionFlagTimer = 1000;
       }
+      if(distortionTimer == 0) console.log("distortionTimer = 0!");
       distortionFlagTimer --;
     }
 
