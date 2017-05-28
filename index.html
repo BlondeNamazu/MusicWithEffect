@@ -263,8 +263,8 @@
         gx = data[2];
         if(nowPlaying){
           if(mode){
-            pan.positionX.value = -gx;
-            pan.orientationX.value = gx;
+            pan.positionX.value = -100*gx;
+            pan.orientationX.value = 100*gx;
           } else {
             setBFilter(gx*3.5);
           }
@@ -273,8 +273,8 @@
         gy = data[2];
         if(nowPlaying){
           if(mode){
-            pan.positionZ = gy/10;
-            pan.orientationY.value = -gy/10;
+            pan.positionZ = 100*gy;
+            pan.orientationY.value = -100*gy;
           } else {
             setDelay(Math.pow(Math.abs(gy),4)/80000);
           }
@@ -283,8 +283,8 @@
         gz = data[2];
         if(nowPlaying){
           if(mode){
-            pan.positionY = -gz;
-            pan.orientationZ.value = gz;
+            pan.positionY = -100*gz;
+            pan.orientationZ.value = 100*gz;
           } else {
             changeVolume(0.65+gz/30.0);
           }
