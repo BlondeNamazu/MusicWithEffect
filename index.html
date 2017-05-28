@@ -264,7 +264,7 @@
         if(nowPlaying){
           if(mode){
             pan.positionX.value = -gx;
-            // pan.orientationX.value = gx;
+            pan.orientationX.value = gx;
           } else {
             setBFilter(gx*3.5);
           }
@@ -274,7 +274,7 @@
         if(nowPlaying){
           if(mode){
             pan.positionZ = gy/10;
-            // pan.orientationY.value = -gy/10;
+            pan.orientationY.value = -gy/10;
           } else {
             setDelay(Math.pow(Math.abs(gy),4)/80000);
           }
@@ -284,7 +284,7 @@
         if(nowPlaying){
           if(mode){
             pan.positionY = -gz;
-            // pan.orientationZ.value = gz;
+            pan.orientationZ.value = gz;
           } else {
             changeVolume(0.65+gz/30.0);
           }
