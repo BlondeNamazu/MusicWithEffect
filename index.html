@@ -67,6 +67,7 @@
     var gainNode,distortion,bFilter,convolver,synth;
     var bufferClock,bufferAudio;
     var isDelayValid = false;
+    var isDistortionValid = false;
     
     function init(){
       window.AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -272,11 +273,11 @@
       if(ax>30 && gx > 8) isDelayValid = true;
       else if (ax < -30 && gx < -8) isDelayValid = false;
       
-      if(az < -30) {
-        makeDistortionCurve(400);
+      if(az < -30 && !isDistortionValid) {
+        makeDistortionCurve(100);
         console.log("add distortion!");
       }
-      else if (az > 30) {
+      else if (az > 30 && isDistortionValid) {
         makeDistortionCurve(0);
         console.log("remove distortion!");
       }
