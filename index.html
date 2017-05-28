@@ -247,10 +247,10 @@
       if(data[1] == null) return;
       if(data[1] == "gx"){
         gx = data[2];
-        if(nowPlaying)setBFilter(gx * 4);
+        if(nowPlaying)setBFilter(Math.abs(gx)*40 * 4);
       } else if(data[1] == "gy"){
         gy = data[2];
-        if(nowPlaying)makeDistortionCurve(Math.abs(gy)*40);
+        if(nowPlaying)makeDistortionCurve(Math.abs(gy)*10);
       } else if(data[1] == "gz"){
         gz = data[2];
         if(nowPlaying)changeVolume(0.5+gz/20.0);
