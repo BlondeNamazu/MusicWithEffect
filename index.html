@@ -68,6 +68,7 @@
     var bufferClock,bufferAudio;
     var isDelayValid = false;
     var isDistortionValid = false;
+    var timer = 0;
     var mode = true;
     
     function init(){
@@ -263,8 +264,7 @@
         gx = data[2];
         if(nowPlaying){
           if(mode){
-            pan.positionX.value = -100*gx;
-            pan.orientationX.value = 100*gx;
+            pan.positionX = -gx;
           } else {
             setBFilter(gx*3.5);
           }
@@ -273,8 +273,7 @@
         gy = data[2];
         if(nowPlaying){
           if(mode){
-            pan.positionZ = 100*gy;
-            pan.orientationY.value = -100*gy;
+            pan.positionZ = gy;
           } else {
             setDelay(Math.pow(Math.abs(gy),4)/80000);
           }
@@ -283,8 +282,7 @@
         gz = data[2];
         if(nowPlaying){
           if(mode){
-            pan.positionY = -100*gz;
-            pan.orientationZ.value = 100*gz;
+            pan.positionY = -gz;
           } else {
             changeVolume(0.65+gz/30.0);
           }
@@ -298,6 +296,11 @@
       } else if(data[1] == "az"){
         az = data[2];
       } 
+      var aSize = Math.sqrt(ax*ax+ay*ay+az*az);
+      if(ax>30 && gx > 8) isDelayValid = true;
+      else if (ax < -30 && gx < -8) isDelayValid = false;
+      
+      timer --;
     }
 
     // 3.開始処理
