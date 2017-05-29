@@ -281,12 +281,12 @@
       if(data[1] == "gx"){
         gx = data[2];
         cR=25*gx;
-        ballX = 1-gx/20.0;
+        ballX = 0.5-gx/20.0;
         if(nowPlaying)setBFilter(gx*3.5);
       } else if(data[1] == "gy"){
         gy = data[2];
         cG=25*gy;
-        ballY = 1-gy/20.0;
+        ballY = 0.5+gy/20.0;
         if(nowPlaying)pan.pan.value = gy / 10.0;
       } else if(data[1] == "gz"){
         gz = data[2];
@@ -303,6 +303,7 @@
       } 
       var aSize = Math.sqrt(ax*ax+ay*ay+az*az);
       ballR = Math.max(30,aSize*3);
+      ctx.clearRect(0,0,canvas.width,canvas.height);
       ctx.fillStyle= 'rgb('+Math.floor((25*gx+255)/2)+','+Math.floor((25*gy+255)/2)+','+Math.floor((25*gz+255)/2)+')';
       ctx.fillRect(0,0,canvas.width,canvas.height);
       ctx.fillStyle= 'rgb('+Math.floor((-25*gy+255)/2)+','+Math.floor((-25*gz+255)/2)+','+Math.floor((-25*gx+255)/2)+')';
