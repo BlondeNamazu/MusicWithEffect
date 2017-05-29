@@ -71,6 +71,8 @@
     
     function init(){
       canvas = document.getElementById("canvas");
+      canvas.style.width = window.innerWidth + 'px';
+      canvas.style.height = window.innerHeight + 'px';
       ctx = canvas.getContext("2d");
       canvas.addEventListener('click',onClick);
       
