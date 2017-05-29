@@ -53,7 +53,7 @@
     //ballRange
     var ballR = 0;
     
-    var alpha = 0.9;
+    var alpha = 0.7;
     
     var loadFinished = false;
     var nowPlaying = false;
@@ -296,18 +296,16 @@
       if(data[1] == "gx"){
         gx = data[2];
         cR=25*gx;
-        // ballY = ballY*alpha+(1-alpha)*(0.5+gx/20.0);
         if(nowPlaying)setBFilter(gx*3.5);
       } else if(data[1] == "gy"){
         gy = data[2];
         cG=25*gy;
-        // ballX = ballX*alpha+(1-alpha)*(0.5+gy/20.0);
         if(nowPlaying)pan.pan.value = gy / 10.0;
       } else if(data[1] == "gz"){
         gz = data[2];
         cB=25*gz;
       } else if(data[1] == "light"){
-        light = data[2];
+        light = light*alpha+(1-alpha)*data[2];
         if(nowPlaying)changeVolume(Math.min(light/100,1.0));
       } else if(data[1] == "ax"){
         ax = data[2];
