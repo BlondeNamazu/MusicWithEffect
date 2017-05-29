@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Message with Effect</title>
+  <title>Music with Effect</title>
 </head>
 <body>
   <input type="text" id="msg_input" style="width:200px;" />
@@ -47,11 +47,13 @@
     var cb=255;
     
     //ballPosition
-    var ballX;
-    var ballY;
+    var ballX = 0;
+    var ballY = 0;
     
     //ballRange
     var ballR;
+    
+    var alpha = 0.8;
     
     var loadFinished = false;
     var nowPlaying = false;
@@ -281,12 +283,12 @@
       if(data[1] == "gx"){
         gx = data[2];
         cR=25*gx;
-        ballX = 0.5-gx/20.0;
+        ballY = ballY*alpha+(1-alpha)*(0.5-gx/20.0);
         if(nowPlaying)setBFilter(gx*3.5);
       } else if(data[1] == "gy"){
         gy = data[2];
         cG=25*gy;
-        ballY = 0.5+gy/20.0;
+        ballX = ballX*alpha+(1-alpha)*(0.5-gy/20.0);
         if(nowPlaying)pan.pan.value = gy / 10.0;
       } else if(data[1] == "gz"){
         gz = data[2];
