@@ -317,7 +317,7 @@
         az = data[2];
       } 
       var aSize = Math.sqrt(ax*ax+ay*ay+az*az);
-      if(nowPlaying)setDelay(aSize>50?aSize-50:0);
+      if(nowPlaying)setDelay(aSize>30?(aSize-30)/200:0);
       
     }
 
