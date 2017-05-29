@@ -2,79 +2,90 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Chat App</title>
+  <title>Music with Effect</title>
 </head>
 <body>
-  <input type="text" id="msg_input" style="width:200px;" />
+  <!--<input type="text" id="msg_input" style="width:200px;" />
   <button onclick="publishMessage();">語る</button>
-  <button id="playbutton" onclick="playMusic();">Play</button>
-  <div>
+  <button id="playbutton" onclick="playMusic();">Play</button>-->
+  <!--<div>
   <audio id="audio1" src="clock.mp3" preload="auto" style="width:25%" controls loop>Canvas not supported</audio>
   </div>
   <div>
   <input type="range" min="0" max="100" value="100" onchange="changeVolume(this.value);" />
-  </div>
+  </div>-->
   <!--<div>
   <input type="text" id="audioFile" value="./clock.mp3" size="60" />
   </div>-->
-  <div id="msg"></div>
+  <!--<div id="msg"></div>-->
+  <canvas id="canvas" width="1000" height="1000"></canvas>
   <script src="/socket.io/socket.io.js"></script>
   <script type="text/javascript">
     // 1.イベントとコールバックの定義
     //var socketio = io.connect('http://localhost:8080');
     var socketio = io.connect();
     
-    //values
+    var ctx;
+    var canvas;
+    
+    //gravity values
     var gx=0;
     var gy=0;
     var gz=0;
+    
+    //light values
     var light=0;
+    
+    //acceleration values
     var ax=0;
     var ay=0;
     var az=0;
     
+    //color component
+    var cr=255;
+    var cg=255;
+    var cb=255;
+    
+    //ballPosition
+    var ballX = 0;
+    var ballY = 0;
+    
+    //ballRange
+    var ballR = 0;
+    
+    var alpha = 0.7;
+    
     var loadFinished = false;
     var nowPlaying = false;
     
-    var audioElm = new Audio("./clock.mp3");
-    
-    function togglePlay(){
-        if(audioElm.paused == true){
-            playAudio(audioElm);
-        } else {
-          pauseAudio(audioElm);
-        }
-    }
-    
-    function playAudio(audioElm){
-      document.getElementById("playbutton").innerHTML="Pause";
-      //audioElm.src = document.getElementById('audioFile').value;
-      
-      audioElm.play();
-      //document.querySelector('#audioFile').play();
-    }
-    
-    function pauseAudio(audioElm){
-      document.getElementById("playbutton").innerHTML="Play";
-      audioElm.pause();
-    }
-
     socketio.on("publish", function (data) { addMessage(data.value); });
     
     var context;
     var bufferLoader;
-    var sourceClock,sourceAudio;
-    var gainNode;
+    var sourceClock//,sourceAudio;
+    var gainNode,distortion,bFilter,convolver,synth,pan;
     var bufferClock,bufferAudio;
+    var isDelayValid = false;
+    var isDistortionValid = false;
+    var distortionFlagTimer = 0;
     
     function init(){
+      canvas = document.getElementById("canvas");
+      canvas.style.width = window.innerWidth + 'px';
+      canvas.style.height = window.innerHeight + 'px';
+      canvas.width = window.innerWidth * window.devicePixelRatio;
+      canvas.height = window.innerHeight * window.devicePixelRatio;
+      ctx = canvas.getContext("2d");
+      canvas.addEventListener('click',onClick);
+      
       window.AudioContext = window.AudioContext || window.webkitAudioContext;
       context = new AudioContext();
       bufferLoader = new BufferLoader(
         context,
         [
-          './clock.mp3',
-          './audio.mp3'
+          './zense.mp3'
+          // './clock.mp3'
+          // './audio.mp3'
         ],
         finishedLoading
       );
@@ -84,7 +95,7 @@
     function finishedLoading(bufferList){
       console.log("finished Loading!");
       bufferClock = bufferList[0];
-      bufferAudio = bufferList[0];
+      //bufferAudio = bufferList[0];
       
       loadFinished = true;
     }
@@ -137,9 +148,36 @@
     }
     
     function changeVolume (val){
-      gainNode.gain.value = val * val /10000;
+      if(val>1) val /= 10000;
+      gainNode.gain.value = val;
     }
     
+    function makeDistortionCurve(amount) {
+      var k = typeof amount === 'number' ? amount : 50,
+        n_samples = 44100,
+        curve = new Float32Array(n_samples),
+        deg = Math.PI / 180,
+        i = 0,
+        x;
+      for ( ; i < n_samples; ++i ) {
+        x = i * 2 / n_samples - 1;
+        curve[i] = ( 3 + k ) * x * 20 * deg / ( Math.PI + k * Math.abs(x) );
+      }
+      //return curve;
+      distortion.curve = curve;
+      distortion.oversample = '4x';
+    };
+    
+    function setBFilter (value){
+      bFilter.type = "lowshelf";
+      bFilter.frequency.value = 1000;
+      bFilter.gain.value = value;
+    }
+    
+    function setDelay(value){
+      synth.delayTime.value = value;
+    }
+        
     function playMusic (){
       if(!loadFinished){
         console.log("Please wait");
@@ -147,16 +185,30 @@
       }
       if(!nowPlaying){
         sourceClock = context.createBufferSource();
-        sourceAudio = context.createBufferSource();
+        //sourceAudio = context.createBufferSource();
         sourceClock.buffer = bufferClock;
-        sourceAudio.buffer = bufferAudio;
+        //sourceAudio.buffer = bufferAudio;
         
         //sourceClock.connect(context.destination);
-        sourceAudio.connect(context.destination);
+        //sourceAudio.connect(context.destination);
         
         gainNode = context.createGain();
-        sourceClock.connect(gainNode);
-        gainNode.connect(context.destination);
+        distortion = context.createWaveShaper();
+        bFilter = context.createBiquadFilter();
+        convolver = context.createConvolver();
+        synth = context.createDelay(5.0);
+        pan = context.createStereoPanner();
+        
+        sourceClock.connect(distortion);
+        distortion.connect(bFilter);
+        bFilter.connect(synth);
+        synth.connect(gainNode);
+        gainNode.connect(pan);
+        pan.connect(context.destination)
+        
+        bFilter.gain.value = 0;
+        
+        
         
         sourceClock.loop = true;
         sourceClock.start(0);
@@ -171,6 +223,7 @@
     function start(name) {
       init();
       socketio.emit("connected", name);
+      setInterval(drawCanvas,8);
     }
 
     function publishMessage() {
@@ -185,15 +238,15 @@
     }
 
     function addMessage (msg) {
-      clearMsgArea();
+      //clearMsgArea();
       parse(msg);
-      addMsgChild("gx = ",gx);
-      addMsgChild("gy = ",gy);
-      addMsgChild("gz = ",gz);
-      addMsgChild("light = ",light);
-      addMsgChild("ax = ",ax);
-      addMsgChild("ay = ",ay);
-      addMsgChild("az = ",az);
+      // addMsgChild("gx = ",gx);
+      // addMsgChild("gy = ",gy);
+      // addMsgChild("gz = ",gz);
+      // addMsgChild("light = ",light);
+      // addMsgChild("ax = ",ax);
+      // addMsgChild("ay = ",ay);
+      // addMsgChild("az = ",az);
       //msgArea.insertBefore(domMeg,msgArea.firstChild)
     }
     
@@ -208,17 +261,52 @@
       while(msgArea.firstChild) msgArea.removeChild(msgArea.firstChild);
     }
     
+    function onClick(e){
+      playMusic();
+    }
+    function drawCanvas(){
+      if(!loadFinished) return;
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      ctx.fillStyle= 'rgb('+Math.floor((25*gx+255)/2)+','+Math.floor((25*gy+255)/2)+','+Math.floor((25*gz+255)/2)+')';
+      ctx.fillRect(0,0,canvas.width,canvas.height);
+      ctx.font= 'bold 300px Century Gothic';
+      ctx.strokeStyle = "white";
+      ctx.lineWidth = 5;
+      ctx.lineJoin = 'round';
+      ctx.textAlign = 'center';
+      ctx.testBaseline = 'alphabetic';
+      ctx.strokeText("Music",canvas.width/2,canvas.height*5/16);
+      ctx.strokeText("Effect",canvas.width/2,canvas.height*7/8);
+      ctx.fillStyle= 'rgb('+Math.floor((-25*gy+255)/2)+','+Math.floor((-25*gz+255)/2)+','+Math.floor((-25*gx+255)/2)+')';
+      ctx.fillText("Music",canvas.width/2,canvas.height*5/16);
+      ctx.fillText("Effect",canvas.width/2,canvas.height*7/8);
+      ctx.font= 'bold 100px Century Gothic';
+      ctx.lineWidth = 2;
+      ctx.strokeText("with",canvas.width/2,canvas.height/2);
+      ctx.fillText("with",canvas.width/2,canvas.height/2);
+      // ctx.beginPath();
+      // ctx.arc(canvas.width*ballX,canvas.height*ballY,ballR,0,Math.PI*2,true);
+      // ctx.closePath();
+      // ctx.fill();
+    }
+    
     function parse(data){
       data = data.split(" ");
       if(data[1] == null) return;
       if(data[1] == "gx"){
         gx = data[2];
+        cR=25*gx;
+        if(nowPlaying)setBFilter(gx*3.5);
       } else if(data[1] == "gy"){
         gy = data[2];
+        cG=25*gy;
+        if(nowPlaying)pan.pan.value = gy / 10.0;
       } else if(data[1] == "gz"){
         gz = data[2];
+        cB=25*gz;
       } else if(data[1] == "light"){
-        light = data[2];
+        light = light*alpha+(1-alpha)*data[2];
+        if(nowPlaying)changeVolume(Math.min(light/100,1.0));
       } else if(data[1] == "ax"){
         ax = data[2];
       } else if(data[1] == "ay"){
@@ -226,6 +314,9 @@
       } else if(data[1] == "az"){
         az = data[2];
       } 
+      var aSize = Math.sqrt(ax*ax+ay*ay+az*az);
+      if(nowPlaying)setDelay(aSize>30?(aSize-30)/200:0);
+      
     }
 
     // 3.開始処理

@@ -7,5 +7,9 @@ entrypoint: node app.js
 branch:
     audioContext:
         expose: 1341
+    effect:
+        expose: 1342
+    canvas:
+        expose: 1343
 
 http_proxy: 8080
