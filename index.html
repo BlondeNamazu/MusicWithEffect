@@ -73,6 +73,8 @@
       canvas = document.getElementById("canvas");
       canvas.style.width = window.innerWidth + 'px';
       canvas.style.height = window.innerHeight + 'px';
+      canvas.width = window.innerWidth * window.devicePixelRatio;
+      canvas.height = window.innerHeight * window.devicePixelRatio;
       ctx = canvas.getContext("2d");
       canvas.addEventListener('click',onClick);
       
