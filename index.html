@@ -5,9 +5,9 @@
   <title>Music with Effect</title>
 </head>
 <body>
-  <input type="text" id="msg_input" style="width:200px;" />
+  <!--<input type="text" id="msg_input" style="width:200px;" />
   <button onclick="publishMessage();">語る</button>
-  <button id="playbutton" onclick="playMusic();">Play</button>
+  <button id="playbutton" onclick="playMusic();">Play</button>-->
   <!--<div>
   <audio id="audio1" src="clock.mp3" preload="auto" style="width:25%" controls loop>Canvas not supported</audio>
   </div>
@@ -17,7 +17,7 @@
   <!--<div>
   <input type="text" id="audioFile" value="./clock.mp3" size="60" />
   </div>-->
-  <div id="msg"></div>
+  <!--<div id="msg"></div>-->
   <canvas id="canvas" width="1000" height="1000"></canvas>
   <script src="/socket.io/socket.io.js"></script>
   <script type="text/javascript">
@@ -53,34 +53,11 @@
     //ballRange
     var ballR;
     
-    var alpha = 0.95;
+    var alpha = 0.9;
     
     var loadFinished = false;
     var nowPlaying = false;
     
-    // var audioElm = new Audio("./clock.mp3");
-    
-    // function togglePlay(){
-    //     if(audioElm.paused == true){
-    //         playAudio(audioElm);
-    //     } else {
-    //       pauseAudio(audioElm);
-    //     }
-    // }
-    
-    // function playAudio(audioElm){
-    //   document.getElementById("playbutton").innerHTML="Pause";
-    //   //audioElm.src = document.getElementById('audioFile').value;
-      
-    //   audioElm.play();
-    //   //document.querySelector('#audioFile').play();
-    // }
-    
-    // function pauseAudio(audioElm){
-    //   document.getElementById("playbutton").innerHTML="Play";
-    //   audioElm.pause();
-    // }
-
     socketio.on("publish", function (data) { addMessage(data.value); });
     
     var context;
@@ -95,6 +72,7 @@
     function init(){
       canvas = document.getElementById("canvas");
       ctx = canvas.getContext("2d");
+      canvas.addEventListener('click',onClick);
       
       window.AudioContext = window.AudioContext || window.webkitAudioContext;
       context = new AudioContext();
@@ -254,15 +232,15 @@
     }
 
     function addMessage (msg) {
-      clearMsgArea();
+      //clearMsgArea();
       parse(msg);
-      addMsgChild("gx = ",gx);
-      addMsgChild("gy = ",gy);
-      addMsgChild("gz = ",gz);
-      addMsgChild("light = ",light);
-      addMsgChild("ax = ",ax);
-      addMsgChild("ay = ",ay);
-      addMsgChild("az = ",az);
+      // addMsgChild("gx = ",gx);
+      // addMsgChild("gy = ",gy);
+      // addMsgChild("gz = ",gz);
+      // addMsgChild("light = ",light);
+      // addMsgChild("ax = ",ax);
+      // addMsgChild("ay = ",ay);
+      // addMsgChild("az = ",az);
       //msgArea.insertBefore(domMeg,msgArea.firstChild)
     }
     
@@ -275,6 +253,10 @@
     
     function clearMsgArea(){
       while(msgArea.firstChild) msgArea.removeChild(msgArea.firstChild);
+    }
+    
+    function onClick(e){
+      playMusic();
     }
     
     function parse(data){
@@ -305,6 +287,7 @@
       } 
       var aSize = Math.sqrt(ax*ax+ay*ay+az*az);
       ballR = Math.max(150,aSize*12);
+      if(!loadFinished) return;
       ctx.clearRect(0,0,canvas.width,canvas.height);
       ctx.fillStyle= 'rgb('+Math.floor((25*gx+255)/2)+','+Math.floor((25*gy+255)/2)+','+Math.floor((25*gz+255)/2)+')';
       // ctx.fillRect(0,0,canvas.width,canvas.height);
