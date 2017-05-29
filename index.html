@@ -269,7 +269,7 @@
       ctx.clearRect(0,0,canvas.width,canvas.height);
       ctx.fillStyle= 'rgb('+Math.floor((25*gx+255)/2)+','+Math.floor((25*gy+255)/2)+','+Math.floor((25*gz+255)/2)+')';
       ctx.fillRect(0,0,canvas.width,canvas.height);
-      ctx.font= 'bold 40px Century Gothic';
+      ctx.font= 'bold 100px Century Gothic';
       ctx.strokeStyle = "white";
       ctx.textAlign = 'center';
       ctx.testBaseline = 'middle';
@@ -278,7 +278,7 @@
       ctx.fillStyle= 'rgb('+Math.floor((-25*gy+255)/2)+','+Math.floor((-25*gz+255)/2)+','+Math.floor((-25*gx+255)/2)+')';
       ctx.fillText("Music",canvas.width/2,canvas.height*2/5);
       ctx.fillText("Effect",canvas.width/2,canvas.height*3/5);
-      ctx.font= 'bold 20px Century Gothic';
+      ctx.font= 'bold 60px Century Gothic';
       ctx.strokeText("with",canvas.width/2,canvas.height/2);
       ctx.fillText("with",canvas.width/2,canvas.height/2);
       // ctx.beginPath();
@@ -293,19 +293,19 @@
       if(data[1] == "gx"){
         gx = data[2];
         cR=25*gx;
-        ballY = ballY*alpha+(1-alpha)*(0.5+gx/20.0);
+        // ballY = ballY*alpha+(1-alpha)*(0.5+gx/20.0);
         if(nowPlaying)setBFilter(gx*3.5);
       } else if(data[1] == "gy"){
         gy = data[2];
         cG=25*gy;
-        ballX = ballX*alpha+(1-alpha)*(0.5+gy/20.0);
+        // ballX = ballX*alpha+(1-alpha)*(0.5+gy/20.0);
         if(nowPlaying)pan.pan.value = gy / 10.0;
       } else if(data[1] == "gz"){
         gz = data[2];
         cB=25*gz;
-        if(nowPlaying)setDelay(Math.pow(10-gz,4)/80000);
       } else if(data[1] == "light"){
         light = data[2];
+        if(nowPlaying)changeVolume(Math.min(light/100,1.0));
       } else if(data[1] == "ax"){
         ax = data[2];
       } else if(data[1] == "ay"){
@@ -314,7 +314,8 @@
         az = data[2];
       } 
       var aSize = Math.sqrt(ax*ax+ay*ay+az*az);
-      ballR = Math.max(150,aSize*12);
+      if(nowPlaying)setDelay(aSize/1000);
+      
     }
 
     // 3.開始処理
