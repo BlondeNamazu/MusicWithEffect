@@ -286,7 +286,7 @@
       } else if(data[1] == "az"){
         az = data[2];
       } 
-      ctx.fillStyle= 'rgb('+Math.floor(25*gx)+','+Math.floor(25*gy)+','+Math.floor(25*gz)+')';
+      ctx.fillStyle= 'rgb('+Math.floor((25*gx+255)/2)+','+Math.floor((25*gy+255)/2)+','+Math.floor((25*gz+255)/2)+')';
       ctx.fillRect(0,0,canvas.width,canvas.height);
     }
 
