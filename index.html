@@ -2,27 +2,31 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Chat App</title>
+  <title>Message with Effect</title>
 </head>
 <body>
   <input type="text" id="msg_input" style="width:200px;" />
   <button onclick="publishMessage();">語る</button>
   <button id="playbutton" onclick="playMusic();">Play</button>
-  <div>
+  <!--<div>
   <audio id="audio1" src="clock.mp3" preload="auto" style="width:25%" controls loop>Canvas not supported</audio>
   </div>
   <div>
   <input type="range" min="0" max="100" value="100" onchange="changeVolume(this.value);" />
-  </div>
+  </div>-->
   <!--<div>
   <input type="text" id="audioFile" value="./clock.mp3" size="60" />
   </div>-->
   <div id="msg"></div>
+  <canvas id="canvas" width="1000" height="1000"></canvas>
   <script src="/socket.io/socket.io.js"></script>
   <script type="text/javascript">
     // 1.イベントとコールバックの定義
     //var socketio = io.connect('http://localhost:8080');
     var socketio = io.connect();
+    
+    var ctx;
+    var canvas;
     
     //values
     var gx=0;
@@ -32,32 +36,35 @@
     var ax=0;
     var ay=0;
     var az=0;
+    var cr=255;
+    var cg=255;
+    var cb=255;
     
     var loadFinished = false;
     var nowPlaying = false;
     
-    var audioElm = new Audio("./clock.mp3");
+    // var audioElm = new Audio("./clock.mp3");
     
-    function togglePlay(){
-        if(audioElm.paused == true){
-            playAudio(audioElm);
-        } else {
-          pauseAudio(audioElm);
-        }
-    }
+    // function togglePlay(){
+    //     if(audioElm.paused == true){
+    //         playAudio(audioElm);
+    //     } else {
+    //       pauseAudio(audioElm);
+    //     }
+    // }
     
-    function playAudio(audioElm){
-      document.getElementById("playbutton").innerHTML="Pause";
-      //audioElm.src = document.getElementById('audioFile').value;
+    // function playAudio(audioElm){
+    //   document.getElementById("playbutton").innerHTML="Pause";
+    //   //audioElm.src = document.getElementById('audioFile').value;
       
-      audioElm.play();
-      //document.querySelector('#audioFile').play();
-    }
+    //   audioElm.play();
+    //   //document.querySelector('#audioFile').play();
+    // }
     
-    function pauseAudio(audioElm){
-      document.getElementById("playbutton").innerHTML="Play";
-      audioElm.pause();
-    }
+    // function pauseAudio(audioElm){
+    //   document.getElementById("playbutton").innerHTML="Play";
+    //   audioElm.pause();
+    // }
 
     socketio.on("publish", function (data) { addMessage(data.value); });
     
@@ -71,6 +78,9 @@
     var distortionFlagTimer = 0;
     
     function init(){
+      canvas = document.getElementById("canvas");
+      ctx = canvas.getContext("2d");
+      
       window.AudioContext = window.AudioContext || window.webkitAudioContext;
       context = new AudioContext();
       bufferLoader = new BufferLoader(
@@ -257,12 +267,15 @@
       if(data[1] == null) return;
       if(data[1] == "gx"){
         gx = data[2];
+        cR=25*gx;
         if(nowPlaying)setBFilter(gx*3.5);
       } else if(data[1] == "gy"){
         gy = data[2];
+        cG=25*gy;
         if(nowPlaying)pan.pan.value = gy / 10.0;
       } else if(data[1] == "gz"){
         gz = data[2];
+        cB=25*gz;
         if(nowPlaying)setDelay(Math.pow(10-gz,4)/80000);
       } else if(data[1] == "light"){
         light = data[2];
@@ -273,9 +286,8 @@
       } else if(data[1] == "az"){
         az = data[2];
       } 
-      var aSize = Math.sqrt(ax*ax+ay*ay+az*az);
-      if(ax>30 && gx > 8) isDelayValid = true;
-      else if (ax < -30 && gx < -8) isDelayValid = false;
+      ctx.fillStyle= 'rgb('+Math.floor(25*gx)+','+Math.floor(25*gy)+','+Math.floor(25*gz)+')';
+      ctx.fillRect(0,0,canvas.width,canvas.height);
     }
 
     // 3.開始処理
