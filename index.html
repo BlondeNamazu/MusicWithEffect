@@ -51,7 +51,7 @@
     var ballY = 0;
     
     //ballRange
-    var ballR;
+    var ballR = 0;
     
     var alpha = 0.9;
     
@@ -222,6 +222,7 @@
     function start(name) {
       init();
       socketio.emit("connected", name);
+      setInterval(drawCanvas,8);
     }
 
     function publishMessage() {
@@ -262,6 +263,17 @@
     function onClick(e){
       playMusic();
     }
+    function drawCanvas(){
+      if(!loadFinished) return;
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      ctx.fillStyle= 'rgb('+Math.floor((25*gx+255)/2)+','+Math.floor((25*gy+255)/2)+','+Math.floor((25*gz+255)/2)+')';
+      // ctx.fillRect(0,0,canvas.width,canvas.height);
+      // ctx.fillStyle= 'rgb('+Math.floor((-25*gy+255)/2)+','+Math.floor((-25*gz+255)/2)+','+Math.floor((-25*gx+255)/2)+')';
+      ctx.beginPath();
+      ctx.arc(canvas.width*ballX,canvas.height*ballY,ballR,0,Math.PI*2,true);
+      ctx.closePath();
+      ctx.fill();
+    }
     
     function parse(data){
       data = data.split(" ");
@@ -291,15 +303,6 @@
       } 
       var aSize = Math.sqrt(ax*ax+ay*ay+az*az);
       ballR = Math.max(150,aSize*12);
-      if(!loadFinished) return;
-      ctx.clearRect(0,0,canvas.width,canvas.height);
-      ctx.fillStyle= 'rgb('+Math.floor((25*gx+255)/2)+','+Math.floor((25*gy+255)/2)+','+Math.floor((25*gz+255)/2)+')';
-      // ctx.fillRect(0,0,canvas.width,canvas.height);
-      // ctx.fillStyle= 'rgb('+Math.floor((-25*gy+255)/2)+','+Math.floor((-25*gz+255)/2)+','+Math.floor((-25*gx+255)/2)+')';
-      ctx.beginPath();
-      ctx.arc(canvas.width*ballX,canvas.height*ballY,ballR,0,Math.PI*2,true);
-      ctx.closePath();
-      ctx.fill();
     }
 
     // 3.開始処理
