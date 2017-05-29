@@ -271,8 +271,10 @@
       ctx.fillRect(0,0,canvas.width,canvas.height);
       ctx.font= 'bold 300px Century Gothic';
       ctx.strokeStyle = "white";
+      ctx.lineWidth = 5;
+      ctx.lineJoin = 'round';
       ctx.textAlign = 'center';
-      ctx.testBaseline = 'middle';
+      ctx.testBaseline = 'alphabetic';
       ctx.strokeText("Music",canvas.width/2,canvas.height/4);
       ctx.strokeText("Effect",canvas.width/2,canvas.height*3/4);
       ctx.fillStyle= 'rgb('+Math.floor((-25*gy+255)/2)+','+Math.floor((-25*gz+255)/2)+','+Math.floor((-25*gx+255)/2)+')';
@@ -280,6 +282,7 @@
       ctx.fillText("Effect",canvas.width/2,canvas.height*3/4);
       ctx.font= 'bold 100px Century Gothic';
       ctx.strokeText("with",canvas.width/2,canvas.height/2);
+      ctx.lineWidth = 3;
       ctx.fillText("with",canvas.width/2,canvas.height/2);
       // ctx.beginPath();
       // ctx.arc(canvas.width*ballX,canvas.height*ballY,ballR,0,Math.PI*2,true);
@@ -314,7 +317,7 @@
         az = data[2];
       } 
       var aSize = Math.sqrt(ax*ax+ay*ay+az*az);
-      if(nowPlaying)setDelay(Math.floor(aSize/100)/100);
+      if(nowPlaying)setDelay(Math.floor(aSize/50)/200);
       
     }
 
