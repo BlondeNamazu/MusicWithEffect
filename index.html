@@ -17,6 +17,10 @@
   <div>
   <input type="file" id="file" size="60" />
   </div>
+  <div>
+  <input type="text" id="key" value="" size="60" />
+  </div>
+  <button onclick="setKey();" >setKey</button>
   <!--<div id="msg"></div>-->
   <canvas id="canvas" width="1000" height="1000"></canvas>
   <script src="/socket.io/socket.io.js"></script>
@@ -51,6 +55,8 @@
     var loadFinished = false;
     var nowPlaying = false;
     
+    var key = "";
+    
     socketio.on("publish", function (data) { addMessage(data.value); });
     
     var context;
@@ -63,6 +69,10 @@
     var distortionFlagTimer = 0;
     
     var fileReader;
+    
+    function setKey(){
+      key = document.getElementById("key").value;
+    }
     
     function init(){
       window.AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -274,15 +284,15 @@
     }
 
     function addMessage (msg) {
-      //clearMsgArea();
+      clearMsgArea();
       parse(msg);
-      // addMsgChild("gx = ",gx);
-      // addMsgChild("gy = ",gy);
-      // addMsgChild("gz = ",gz);
-      // addMsgChild("light = ",light);
-      // addMsgChild("ax = ",ax);
-      // addMsgChild("ay = ",ay);
-      // addMsgChild("az = ",az);
+      addMsgChild("gx = ",gx);
+      addMsgChild("gy = ",gy);
+      addMsgChild("gz = ",gz);
+      addMsgChild("light = ",light);
+      addMsgChild("ax = ",ax);
+      addMsgChild("ay = ",ay);
+      addMsgChild("az = ",az);
       //msgArea.insertBefore(domMeg,msgArea.firstChild)
     }
     
@@ -328,6 +338,7 @@
     
     function parse(data){
       data = data.split(" ");
+      if(data[0] != key) return;
       if(data[1] == null) return;
       if(data[1] == "gx"){
         gx = data[2];
