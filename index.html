@@ -20,7 +20,9 @@
   <div>
   <input type="text" id="key" value="" size="60" />
   </div>
+  <div>
   <button onclick="setKey();" >setKey</button>
+  </div>
   <!--<div id="msg"></div>-->
   <canvas id="canvas" width="1000" height="1000"></canvas>
   <script src="/socket.io/socket.io.js"></script>
@@ -284,15 +286,15 @@
     }
 
     function addMessage (msg) {
-      clearMsgArea();
+      // clearMsgArea();
       parse(msg);
-      addMsgChild("gx = ",gx);
-      addMsgChild("gy = ",gy);
-      addMsgChild("gz = ",gz);
-      addMsgChild("light = ",light);
-      addMsgChild("ax = ",ax);
-      addMsgChild("ay = ",ay);
-      addMsgChild("az = ",az);
+      // addMsgChild("gx = ",gx);
+      // addMsgChild("gy = ",gy);
+      // addMsgChild("gz = ",gz);
+      // addMsgChild("light = ",light);
+      // addMsgChild("ax = ",ax);
+      // addMsgChild("ay = ",ay);
+      // addMsgChild("az = ",az);
       //msgArea.insertBefore(domMeg,msgArea.firstChild)
     }
     
