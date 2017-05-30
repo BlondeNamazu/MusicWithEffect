@@ -92,7 +92,7 @@
         synth = context.createDelay(5.0);
         pan = context.createStereoPanner();
         
-        sourceClock.connect(distortion);
+        source.connect(distortion);
         distortion.connect(bFilter);
         bFilter.connect(synth);
         synth.connect(gainNode);
@@ -291,7 +291,7 @@
     }
     
     function onClick(e){
-      playMusic();
+      //playMusic();
     }
     function drawCanvas(){
       if(!loadFinished) return;
