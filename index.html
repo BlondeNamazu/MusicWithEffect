@@ -10,13 +10,13 @@
   <button id="playbutton" onclick="playMusic();">Play</button>-->
   <!--<div>
   <audio id="audio1" src="clock.mp3" preload="auto" style="width:25%" controls loop>Canvas not supported</audio>
-  </div>
-  <div>
-  <input type="range" min="0" max="100" value="100" onchange="changeVolume(this.value);" />
   </div>-->
   <!--<div>
-  <input type="text" id="audioFile" value="./clock.mp3" size="60" />
+  <input type="range" min="0" max="100" value="100" onchange="changeVolume(this.value);" />
   </div>-->
+  <div>
+  <input type="file" id="file" size="60" />
+  </div>
   <!--<div id="msg"></div>-->
   <canvas id="canvas" width="1000" height="1000"></canvas>
   <script src="/socket.io/socket.io.js"></script>
@@ -46,13 +46,6 @@
     var cg=255;
     var cb=255;
     
-    //ballPosition
-    var ballX = 0;
-    var ballY = 0;
-    
-    //ballRange
-    var ballR = 0;
-    
     var alpha = 0.7;
     
     var loadFinished = false;
@@ -62,14 +55,19 @@
     
     var context;
     var bufferLoader;
-    var sourceClock//,sourceAudio;
+    var sourceClock;
     var gainNode,distortion,bFilter,convolver,synth,pan;
-    var bufferClock,bufferAudio;
+    var bufferClock;
     var isDelayValid = false;
     var isDistortionValid = false;
     var distortionFlagTimer = 0;
     
+    var fileReader;
+    
     function init(){
+      window.AudioContext = window.AudioContext || window.webkitAudioContext;
+      context = new AudioContext();
+      
       canvas = document.getElementById("canvas");
       canvas.style.width = window.innerWidth + 'px';
       canvas.style.height = window.innerHeight + 'px';
@@ -78,74 +76,106 @@
       ctx = canvas.getContext("2d");
       canvas.addEventListener('click',onClick);
       
-      window.AudioContext = window.AudioContext || window.webkitAudioContext;
-      context = new AudioContext();
-      bufferLoader = new BufferLoader(
-        context,
-        [
-          './zense.mp3'
-          // './clock.mp3'
-          // './audio.mp3'
-        ],
-        finishedLoading
-      );
-      bufferLoader.load();
-    }
-    
-    function finishedLoading(bufferList){
-      console.log("finished Loading!");
-      bufferClock = bufferList[0];
-      //bufferAudio = bufferList[0];
+      fileReader = new FileReader;
+      fileReader.onload = function(){
+        context.decodeAudioData(fileReader.result, function(buffer){
+        if(source) {
+          source.stop();
+        }
+        source = context.createBufferSource();
+
+        source.buffer = buffer;
+        gainNode = context.createGain();
+        distortion = context.createWaveShaper();
+        bFilter = context.createBiquadFilter();
+        convolver = context.createConvolver();
+        synth = context.createDelay(5.0);
+        pan = context.createStereoPanner();
+        
+        sourceClock.connect(distortion);
+        distortion.connect(bFilter);
+        bFilter.connect(synth);
+        synth.connect(gainNode);
+        gainNode.connect(pan);
+        pan.connect(context.destination);
+        
+        bFilter.gain.value = 0;
+        
+        source.loop = true;
+        source.start(0);
+        });
+      };
       
-      loadFinished = true;
+      document.getElementById('file').addEventListener('change', function(e){
+        fileReader.readAsArrayBuffer(e.target.files[0]);
+      });
+      
+      // bufferLoader = new BufferLoader(
+      //   context,
+      //   [
+      //     './zense.mp3'
+      //     // './clock.mp3'
+      //     // './audio.mp3'
+      //   ],
+      //   finishedLoading
+      // );
+      // bufferLoader.load();
     }
     
-    function BufferLoader(context, urlList, callback) {
-      this.context = context;
-      this.urlList = urlList;
-      this.onload = callback;
-      this.bufferList = new Array();
-      this.loadCount = 0;
-    }
+    // function finishedLoading(bufferList){
+    //   console.log("finished Loading!");
+    //   bufferClock = bufferList[0];
+    //   //bufferAudio = bufferList[0];
+      
+    //   loadFinished = true;
+    // }
+    
+    // function BufferLoader(context, urlList, callback) {
+    //   this.context = context;
+    //   this.urlList = urlList;
+    //   this.onload = callback;
+    //   this.bufferList = new Array();
+    //   this.loadCount = 0;
+    // }
 
-    BufferLoader.prototype.loadBuffer = function(url, index) {
-      // Load buffer asynchronously
-      var request = new XMLHttpRequest();
-      request.open("GET", url, true);
-      request.responseType = "arraybuffer";
+    // BufferLoader.prototype.loadBuffer = function(url, index) {
+    //   // Load buffer asynchronously
+    //   var request = new XMLHttpRequest();
+    //   request.open("GET", url, true);
+    //   request.responseType = "arraybuffer";
 
-      var loader = this;
+    //   var loader = this;
 
-      request.onload = function() {
-        // Asynchronously decode the audio file data in request.response
-        loader.context.decodeAudioData(
-          request.response,
-          function(buffer) {
-            if (!buffer) {
-              alert('error decoding file data: ' + url);
-              return;
-            }
-            loader.bufferList[index] = buffer;
-            if (++loader.loadCount == loader.urlList.length)
-              loader.onload(loader.bufferList);
-          },
-          function(error) {
-            console.error('decodeAudioData error', error);
-          }
-        );
-      }
+    //   request.onload = function() {
+    //     // Asynchronously decode the audio file data in request.response
+    //     loader.context.decodeAudioData(
+    //       request.response,
+    //       function(buffer) {
+    //         if (!buffer) {
+    //           alert('error decoding file data: ' + url);
+    //           return;
+    //         }
+    //         loader.bufferList[index] = buffer;
+    //         if (++loader.loadCount == loader.urlList.length)
+    //           loader.onload(loader.bufferList);
+    //       },
+    //       function(error) {
+    //         console.error('decodeAudioData error', error);
+    //       }
+    //     );
+    //   }
 
-      request.onerror = function() {
-        alert('BufferLoader: XHR error');
-      }
+    //   request.onerror = function() {
+    //     alert('BufferLoader: XHR error');
+    //   }
 
-      request.send();
-    }
+    //   request.send();
+    // }
 
-    BufferLoader.prototype.load = function() {
-      for (var i = 0; i < this.urlList.length; ++i)
-      this.loadBuffer(this.urlList[i], i);
-    }
+    // BufferLoader.prototype.load = function() {
+    //   for (var i = 0; i < this.urlList.length; ++i)
+    //   this.loadBuffer(this.urlList[i], i);
+    // }
     
     function changeVolume (val){
       if(val>1) val /= 10000;
@@ -185,7 +215,6 @@
       }
       if(!nowPlaying){
         sourceClock = context.createBufferSource();
-        //sourceAudio = context.createBufferSource();
         sourceClock.buffer = bufferClock;
         //sourceAudio.buffer = bufferAudio;
         
