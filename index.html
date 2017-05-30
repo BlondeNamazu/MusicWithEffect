@@ -69,10 +69,11 @@
       context = new AudioContext();
       
       canvas = document.getElementById("canvas");
-      canvas.style.width = window.innerWidth + 'px';
-      canvas.style.height = window.innerHeight + 'px';
-      canvas.width = window.innerWidth * window.devicePixelRatio;
-      canvas.height = window.innerHeight * window.devicePixelRatio;
+      // canvas.style.width = window.innerWidth + 'px';
+      // canvas.style.height = window.innerHeight + 'px';
+      // canvas.width = window.innerWidth * window.devicePixelRatio;
+      // canvas.height = window.innerHeight * window.devicePixelRatio;
+      
       ctx = canvas.getContext("2d");
       canvas.addEventListener('click',onClick);
       
@@ -81,6 +82,8 @@
         context.decodeAudioData(fileReader.result, function(buffer){
         if(source) {
           source.stop();
+          nowPlaying = false;
+          loadFinished = false;
         }
         source = context.createBufferSource();
 
@@ -101,8 +104,12 @@
         
         bFilter.gain.value = 0;
         
+        loadFinished = true;
+        
         source.loop = true;
         source.start(0);
+        
+        nowPlaying = true;
         });
       };
       
