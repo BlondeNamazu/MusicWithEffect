@@ -5,15 +5,6 @@
   <title>Music with Effect</title>
 </head>
 <body>
-  <!--<input type="text" id="msg_input" style="width:200px;" />
-  <button onclick="publishMessage();">語る</button>
-  <button id="playbutton" onclick="playMusic();">Play</button>-->
-  <!--<div>
-  <audio id="audio1" src="clock.mp3" preload="auto" style="width:25%" controls loop>Canvas not supported</audio>
-  </div>-->
-  <!--<div>
-  <input type="range" min="0" max="100" value="100" onchange="changeVolume(this.value);" />
-  </div>-->
   <div>
   <input type="file" id="file" size="60" />
   </div>
@@ -128,73 +119,7 @@
       document.getElementById('file').addEventListener('change', function(e){
         fileReader.readAsArrayBuffer(e.target.files[0]);
       });
-      
-      // bufferLoader = new BufferLoader(
-      //   context,
-      //   [
-      //     './zense.mp3'
-      //     // './clock.mp3'
-      //     // './audio.mp3'
-      //   ],
-      //   finishedLoading
-      // );
-      // bufferLoader.load();
     }
-    
-    // function finishedLoading(bufferList){
-    //   console.log("finished Loading!");
-    //   bufferClock = bufferList[0];
-    //   //bufferAudio = bufferList[0];
-      
-    //   loadFinished = true;
-    // }
-    
-    // function BufferLoader(context, urlList, callback) {
-    //   this.context = context;
-    //   this.urlList = urlList;
-    //   this.onload = callback;
-    //   this.bufferList = new Array();
-    //   this.loadCount = 0;
-    // }
-
-    // BufferLoader.prototype.loadBuffer = function(url, index) {
-    //   // Load buffer asynchronously
-    //   var request = new XMLHttpRequest();
-    //   request.open("GET", url, true);
-    //   request.responseType = "arraybuffer";
-
-    //   var loader = this;
-
-    //   request.onload = function() {
-    //     // Asynchronously decode the audio file data in request.response
-    //     loader.context.decodeAudioData(
-    //       request.response,
-    //       function(buffer) {
-    //         if (!buffer) {
-    //           alert('error decoding file data: ' + url);
-    //           return;
-    //         }
-    //         loader.bufferList[index] = buffer;
-    //         if (++loader.loadCount == loader.urlList.length)
-    //           loader.onload(loader.bufferList);
-    //       },
-    //       function(error) {
-    //         console.error('decodeAudioData error', error);
-    //       }
-    //     );
-    //   }
-
-    //   request.onerror = function() {
-    //     alert('BufferLoader: XHR error');
-    //   }
-
-    //   request.send();
-    // }
-
-    // BufferLoader.prototype.load = function() {
-    //   for (var i = 0; i < this.urlList.length; ++i)
-    //   this.loadBuffer(this.urlList[i], i);
-    // }
     
     function changeVolume (val){
       if(val>1) val /= 10000;
@@ -235,10 +160,7 @@
       if(!nowPlaying){
         sourceClock = context.createBufferSource();
         sourceClock.buffer = bufferClock;
-        //sourceAudio.buffer = bufferAudio;
         
-        //sourceClock.connect(context.destination);
-        //sourceAudio.connect(context.destination);
         
         gainNode = context.createGain();
         distortion = context.createWaveShaper();
@@ -332,10 +254,6 @@
       ctx.lineWidth = 2;
       ctx.strokeText("with",canvas.width/2,canvas.height/2);
       ctx.fillText("with",canvas.width/2,canvas.height/2);
-      // ctx.beginPath();
-      // ctx.arc(canvas.width*ballX,canvas.height*ballY,ballR,0,Math.PI*2,true);
-      // ctx.closePath();
-      // ctx.fill();
     }
     
     function parse(data){
@@ -369,9 +287,6 @@
     }
 
     // 3.開始処理
-    var msgArea = document.getElementById("msg");
-    var myName = Math.floor(Math.random()*100) + "さん";
-    addMessage("貴方は" + myName + "として入室しました");
     start(myName);
   </script>
 </body>
